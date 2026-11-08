@@ -18,8 +18,7 @@ const assert=require('node:assert/strict');
    await fits(`question ${i+1}`);await frame.locator('[data-answer="tanpa"]').click();await fits(`feedback ${i+1}`);await frame.locator('[data-action="next"]').click();await frame.locator('.leave').waitFor({state:'detached'});
   }
   await fits('revision');
-  await frame.getByRole('button',{name:'HALAMAN SETERUSNYA',exact:true}).click();await fits('outro after revision');
-  await frame.getByRole('button',{name:'← Lihat skor semula',exact:true}).click();await fits('revision restored');
+  assert.equal(await frame.locator('[data-action="activity-outro"]').count(),0);
   await frame.getByRole('button',{name:'CUBA LAGI',exact:true}).click();
   for(const a of ['dengan','tanpa','dengan','tanpa','dengan']){await frame.locator(`[data-answer="${a}"]`).click();await frame.locator('[data-action="next"]').click();await frame.locator('.leave').waitFor({state:'detached'})}
   await fits('success');await frame.getByRole('button',{name:'HALAMAN SETERUSNYA',exact:true}).click();await fits('final outro');await frame.getByRole('button',{name:'Kembali ke halaman utama',exact:true}).click();

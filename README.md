@@ -2,7 +2,7 @@
 
 **正式在线游戏 / Laman rasmi:** https://g-ipgp251801465-glitch.github.io/kuiz-jenisayattanya/
 
-适合马来西亚四年级学生的马来语互动测验。五道题、即时解释、一次性计分、成功与复习两种结果。分数页的 **HALAMAN SETERUSNYA** 会进入独立末页，显示祝贺文字、持续向下移动的箭头，以及点击所在网页下方活动按钮的提示。**Lihat skor semula** 可返回查看原分数，**CUBA LAGI** 完整重置测验。
+适合马来西亚四年级学生的马来语互动测验。五道题、即时解释、一次性计分、成功与复习两种结果。答对 4 或 5 题时，分数页的 **HALAMAN SETERUSNYA** 才会出现并进入独立末页；答对 0–3 题时只能复习及重试。末页显示祝贺文字、持续向下移动的箭头，以及点击所在网页下方活动按钮的提示。**Lihat skor semula** 可返回查看原分数，**CUBA LAGI** 完整重置测验。
 
 ![游戏首页](docs/preview/halaman-utama.png)
 
@@ -74,3 +74,8 @@ Nunito 与 Outfit 字体在构建中自带，SIL OFL 许可证位于 `public/lic
 ## Cloudflare
 
 Pages 构建命令为 `npm run build`，输出目录为 `dist`。也可用提供的 `wrangler.jsonc` 将 `dist` 部署为 Workers 静态资源；需要在自己的 Cloudflare 账户完成认证。
+
+
+## Syarat meneruskan misi
+
+Murid mesti menjawab sekurang-kurangnya **4 daripada 5 soalan** dengan betul dan melengkapkan semua lima soalan. Markah 0–3 memaparkan ulang kaji dan **CUBA LAGI** sahaja. Markah 4–5 membuka **HALAMAN SETERUSNYA**. Semakan juga dibuat dalam pengendali halaman akhir supaya peraturan ini bukan sekadar menyembunyikan butang.

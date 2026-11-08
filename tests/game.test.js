@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Quiz, QUESTIONS } from '../src/game.js';
 for (let score = 0; score <= 5; score++) {
-  test(`${score}/5 yields ${score >= 3 ? 'success' : 'revision'} and resets fully`, () => {
+  test(`${score}/5 yields ${score >= 4 ? 'success' : 'revision'} and resets fully`, () => {
     const game = new Quiz();
     for (let i = 0; i < 5; i++) {
       const right = QUESTIONS[i].answer;
@@ -16,9 +16,11 @@ for (let score = 0; score <= 5; score++) {
     }
     assert.equal(game.score, score);
     assert.equal(game.finished, true);
-    assert.equal(game.success, score >= 3);
+    assert.equal(game.success, score >= 4);
+    assert.equal(game.canContinue, score >= 4);
     assert.equal(game.next(), false);
     game.reset();
+    assert.equal(game.canContinue, false);
     assert.deepEqual({index:game.index,score:game.score,selection:game.selection,finished:game.finished}, {index:0,score:0,selection:null,finished:false});
   });
 }
@@ -28,4 +30,15 @@ test('exact question wording and classification', () => {
 });
 test('unanswered questions cannot be skipped; invalid answers do not score', () => {
   const game = new Quiz(); assert.equal(game.next(),false); assert.equal(game.answer('unknown'),null); assert.equal(game.score,0); assert.equal(game.selection,null);
+});
+
+test('four correct answers cannot skip the remaining question', () => {
+  const game = new Quiz();
+  for (let i = 0; i < 4; i++) { game.answer(game.question.answer); game.next(); }
+  assert.equal(game.score, 4);
+  assert.equal(game.canContinue, false);
+  game.answer('tanpa'); game.next();
+  assert.equal(game.finished, true);
+  assert.equal(game.score, 4);
+  assert.equal(game.canContinue, true);
 });

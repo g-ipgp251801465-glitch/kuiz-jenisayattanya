@@ -39,13 +39,14 @@ fs.mkdirSync('.test-results', {recursive:true});
    await page.locator('.leave').waitFor({state:'detached'});
   }
   assert.equal(await page.locator('.result-score>strong').innerText(),`${target} / 5`);
-  assert.equal(await page.locator(target>=3?'.success-ending':'.revision-ending').count(),1);
+  assert.equal(await page.locator(target>=4?'.success-ending':'.revision-ending').count(),1);
   if(target===2) {
    assert.equal(await page.locator('.scene.sad').count(),1);
    await page.waitForTimeout(2100);
    assert.equal(await page.locator('.scene.sad').count(),0);
    await page.screenshot({path:'.test-results/revision-desktop.png'});
   }
+  if(target>=4) {
   await page.getByRole('button',{name:'HALAMAN SETERUSNYA',exact:true}).click();
   assert.equal(await page.locator('.outro-heading').innerText(),'Tahniah!');
   assert.equal(await page.locator('.outro-title').innerText(),'Teruskan Misi Anda dengan Aktiviti Seterusnya!');
@@ -53,6 +54,13 @@ fs.mkdirSync('.test-results', {recursive:true});
   assert.equal(await page.locator('.downward-arrow').evaluate(el=>getComputedStyle(el).animationIterationCount),'infinite');
   await page.getByRole('button',{name:'← Lihat skor semula',exact:true}).click();
   assert.equal(await page.locator('.result-score>strong').innerText(),`${target} / 5`);
+  } else {
+   assert.equal(await page.locator('[data-action="activity-outro"]').count(),0);
+   // A synthetic button must not bypass the gate even when all five questions are finished.
+   await page.evaluate(()=>{const button=document.createElement('button');button.dataset.action='activity-outro';document.querySelector('#app').append(button);button.click();button.remove()});
+   assert.equal(await page.locator('.outro-content').count(),0);
+   assert.equal(await page.locator('.result-score>strong').innerText(),`${target} / 5`);
+  }
   console.log(`PASS browser score ${target}/5, locked answers, exact explanations, reset`);
  }
  assert.equal(await page.locator('[data-action="continue"]').count(),0);

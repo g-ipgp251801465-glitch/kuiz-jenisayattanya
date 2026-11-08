@@ -33,7 +33,7 @@ const fs=require('node:fs');
    if(i<4) assert.equal(await page.locator('.progress-row>span').innerText(),`SOALAN ${i+2} / 5`);
   }
   assert.equal(await page.locator('.result-score>strong').innerText(),`${target} / 5`);
-  assert.equal(await page.locator(target>=3?'.success-ending':'.revision-ending').count(),1);
+  assert.equal(await page.locator(target>=4?'.success-ending':'.revision-ending').count(),1);
   if(target===0){await page.waitForTimeout(450);await page.screenshot({path:'preview/03-ulang-kaji.png'})}
   if(target===5){await page.waitForTimeout(600);await page.screenshot({path:'preview/04-misi-berjaya.png'})}
  }

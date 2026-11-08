@@ -9,7 +9,8 @@ export class Quiz {
   constructor() { this.reset(); }
   reset() { this.index = 0; this.score = 0; this.selection = null; this.finished = false; }
   get question() { return QUESTIONS[this.index]; }
-  get success() { return this.score >= 3; }
+  get success() { return this.score >= 4; }
+  get canContinue() { return this.finished && this.success; }
   answer(choice) {
     if (this.selection !== null || this.finished || !['dengan', 'tanpa'].includes(choice)) return null;
     this.selection = choice;

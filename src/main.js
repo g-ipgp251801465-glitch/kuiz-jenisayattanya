@@ -104,7 +104,7 @@ function home() {
     <p class="intro">Baca, fikir dan pilih! Kenali jenis ayat tanya<br class="desktop-break"> dalam misi ringkas yang menyeronokkan.</p>
     <div class="mission-facts"><span><i class="fact-icon purple">${icon('book')}</i><b>5 soalan</b></span><span><i class="fact-icon pink">${icon('star')}</i><b>5 markah</b></span><span><i class="fact-icon teal">${icon('trophy')}</i><b>1 misi hebat!</b></span></div>
     <div class="home-actions"><button class="button secondary" data-action="instructions">${icon('book')} ARAHAN</button><button class="button primary" data-action="start">MULA MISI ${icon('arrow')}</button></div>
-    <div class="home-note"><span class="mini-dots"><i></i><i></i><i></i></span> Satu jawapan betul, satu markah. Kamu pasti boleh!</div>
+    <div class="home-note"><span class="mini-dots"><i></i><i></i><i></i></span> Jawab 4 atau 5 soalan dengan betul untuk meneruskan misi.</div>
   </div>`;
 }
 function start() {
@@ -169,14 +169,14 @@ function ending(announce = true) {
     if (success) celebrate(65);
     else revisionTimer = setTimeout(() => setMood(), 2000);
   }
-  content.innerHTML = `<div class="result-content enter ${success ? 'success-ending' : 'revision-ending'}"><div class="eyebrow">${success ? '✦ MISI SELESAI ✦' : 'SETIAP CUBAAN MEMBANTU KITA BELAJAR'}</div>
+  content.innerHTML = `<div class="result-content enter ${success ? 'success-ending' : 'revision-ending'}"><div class="eyebrow">${success ? '✦ MISI SELESAI ✦' : 'CUBA LAGI! SASARKAN 4 ATAU 5 JAWAPAN BETUL'}</div>
   ${success ? `<div class="trophy-badge">${icon('trophy')}<span>✧</span><i>✦</i></div><h2 tabindex="-1">TAHNIAH!<br><span class="gradient-text">KAMU HEBAT!</span></h2><p class="result-subtitle">MISI BERJAYA!</p>` : `<h2 tabindex="-1">JOM ULANG KAJI <br><span class="gradient-text">BERSAMA MIMI!</span></h2>`}
   <div class="result-score"><span>MARKAH KAMU</span><strong>${game.score}<small> / 5</small></strong><div class="result-stars">${QUESTIONS.map((_, i) => `<span class="${i < game.score ? 'earned' : ''}">${icon('star')}</span>`).join('')}</div></div>
   ${success ? `<p class="result-note next-activity-note">Seterusnya, teruskan dengan aktiviti yang lain.</p>` : `<div class="revision-cards"><article><span class="revision-letter">A</span><h3>AYAT TANYA<br>DENGAN KATA TANYA</h3><strong>Apakah fungsi komputer?</strong><p>Penerangan: Ayat ini menggunakan kata tanya 'apakah'.</p></article><article><span class="revision-letter">B</span><h3>AYAT TANYA<br>TANPA KATA TANYA</h3><strong>Kamu menggunakan komputer?</strong><p>Penerangan: Ayat ini tidak menggunakan kata tanya. Pertanyaan disampaikan melalui intonasi dan diakhiri dengan tanda soal (?).</p></article></div>`}
-  <div class="result-actions"><button class="button ${success ? 'secondary' : 'primary'}" data-action="start">${icon('replay')} CUBA LAGI</button><button class="button primary" data-action="activity-outro">HALAMAN SETERUSNYA ${icon('arrow')}</button></div></div>`;
+  <div class="result-actions"><button class="button ${success ? 'secondary' : 'primary'}" data-action="start">${icon('replay')} CUBA LAGI</button>${game.canContinue ? `<button class="button primary" data-action="activity-outro">HALAMAN SETERUSNYA ${icon('arrow')}</button>` : ''}</div></div>`;
 }
 function activityOutro() {
-  if (!game.finished) return;
+  if (!game.canContinue) return;
   resetEffects(); stopSpeech();
   screen = 'outro';
   content.classList.remove('answered');
