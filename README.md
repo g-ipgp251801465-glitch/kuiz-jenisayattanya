@@ -1,113 +1,76 @@
-# Mimi 游戏预览 / Pratonton Mimi
+# MISI KENALI JENIS AYAT TANYA!
 
-这是已经实现并通过浏览器测试的游戏实际截图。当前分支用于预览，不改变 `main`。
+**正式在线游戏 / Laman rasmi:** https://g-ipgp251801465-glitch.github.io/kuiz-jenisayattanya/
 
-## 在线试玩
-
-[打开 Mimi 在线游戏](https://g-ipgp251801465-glitch.github.io/kuiz-jenisayattanya/?v=2)
-
-## 直接查看游戏画面
+适合马来西亚四年级学生的马来语互动测验。五道题、即时解释、一次性计分、成功与复习两种结果。分数页的 **HALAMAN SETERUSNYA** 会进入独立末页，显示祝贺文字、持续向下移动的箭头，以及点击所在网页下方活动按钮的提示。**Lihat skor semula** 可返回查看原分数，**CUBA LAGI** 完整重置测验。
 
 ![游戏首页](docs/preview/halaman-utama.png)
 
-![答题画面](docs/preview/jawapan-betul.png)
+![游戏末页](docs/preview/halaman-akhir.png)
 
-![成功结局](docs/preview/misi-berjaya.png)
+## 本地开发
 
-## 下载试玩
-
-[下载试玩 ZIP](https://github.com/g-ipgp251801465-glitch/kuiz-jenisayattanya/raw/refs/heads/codex/mimi-preview/docs/preview/misi-preview.zip)
-
-解压后，用 Chrome、Edge 或 Safari 打开 `misi-preview.html`。图片、字体、动画、答题逻辑和音效均已包含，无需安装 Node.js。马来语朗读取决于设备提供的语音；所有台词都有文字显示。下一活动链接保持未配置，点击时会显示友好提示。
-
-在线版本由 `gh-pages` 分支发布。
-
----
-
-# Misi Kenali Jenis Ayat Tanya!
-
-Kuiz Bahasa Melayu Tahun 4 bersama Mimi. Lima soalan, pengiraan markah sekali bagi setiap jawapan, dua penamat (3–5 markah: berjaya; 0–2 markah: ulang kaji), animasi SVG, bunyi Web Audio dan pertuturan `ms-MY`.
-
-## Pembangunan
-
-Node.js 20.19+ atau 22.12+ diperlukan (diuji dengan Node.js 24).
+需要 Node.js 20.19+ 或 22.12+，已在 Node.js 24 验证。
 
 ```sh
 npm ci
 npm run dev
 ```
 
-Gunakan checkout sedia ada; tugasan awan sudah diasingkan dan tidak memerlukan Git worktree tambahan. Dalam persekitaran yang menyekat cache direktori utama, gunakan `npm ci --cache /tmp/misi-npm-cache`.
+云环境中继续使用现有 checkout；每个任务已经隔离，无需额外 Git worktree。若主目录缓存不可写，可用 `npm ci --cache /tmp/misi-npm-cache`。
 
-## Semakan
+## 构建和测试
 
 ```sh
 npm test
 npm run build
-# Jalankan pelayan pembangunan dalam terminal lain dahulu.
-npx playwright install chromium
-npm run test:e2e
+npm run build:pages
 ```
 
-Jika Chromium sudah dipasang, gunakan `CHROMIUM_PATH=/usr/bin/chromium npm run test:e2e`. `TEST_URL` boleh menetapkan alamat pelayan ujian lain. Ujian pelayar meliputi keenam-enam jumlah markah, penjelasan setiap soalan, penguncian jawapan, tetapan semula, arahan, kawalan bunyi, panggilan pertuturan Melayu, pautan belum tersedia serta susun atur desktop dan mudah alih. Tangkapan skrin disimpan dalam `.test-results/` (diabaikan Git).
+`npm run build` 输出适用于 Cloudflare Pages 的 `dist/`。`npm run build:pages` 另外生成 GitHub Pages 发布文件 `preview/pages/index.html` 和 `_config.yml`。`npm run build:preview` 生成包含字体、音效和原背景的独立 HTML `preview/misi-preview.html`。
 
-Tiada fail audio luaran diperlukan: semua kesan bunyi menggunakan klip WAV tempatan dengan sandaran Web Audio. Pertuturan menggunakan suara Melayu yang tersedia pada peranti; suara wanita dipilih apabila tersedia. Suara asal Mimi tidak dibekalkan dan suara peranti mungkin berbeza atau tidak tersedia. Semua dialog kekal kelihatan. Ujian automatik mengesahkan panggilan audio dan bahasa pertuturan; semakan pendengaran dengan peranti sasaran masih disyorkan.
-
-## Penamat aktiviti
-
-Penamat berjaya memaparkan: “Seterusnya, teruskan dengan aktiviti yang lain.” Hanya butang **CUBA LAGI** dikekalkan; tiada butang atau pautan ke aktiviti lain diperlukan.
-
-## Cloudflare Pages
-
-- Arahan binaan: `npm run build`
-- Direktori hasil: `dist`
-- Tiada pelayan aplikasi, pangkalan data atau kunci API diperlukan.
-- Alternatif CLI: `npx wrangler pages deploy dist --project-name NAMA_PROJEK_ANDA` selepas menyediakan akaun Cloudflare.
-
-Untuk Cloudflare Workers dengan aset statik, gunakan konfigurasi `wrangler.jsonc` yang disediakan dan jalankan `npx wrangler deploy` selepas binaan. Penerbitan memerlukan akaun dan pengesahan pengguna; repositori ini tidak menerbitkan apa-apa secara automatik.
-
-## Benam dalam Google Sites
-
-Selepas menerbitkan, pilih **Sisipkan → Benam → Mengikut URL** dan masukkan URL HTTPS aplikasi. Gunakan nisbah 16:9 di desktop, contohnya 960 × 540. Paparan landskap rendah diskalakan supaya kawalan muat. Pada telefon, kandungan disusun menegak dan boleh ditatal. Untuk kod benaman tersuai:
-
-```html
-<iframe src="URL_HTTPS_APLIKASI_ANDA" title="Misi Kenali Jenis Ayat Tanya" width="960" height="540" style="width:100%;aspect-ratio:16/9;border:0;border-radius:20px" allow="autoplay"></iframe>
-```
-
-Bunyi bermula selepas murid menekan butang. Jangan tetapkan `X-Frame-Options: DENY` atau dasar `frame-ancestors` yang menyekat Google Sites. Muatkan sumber melalui HTTPS. Permainan disemak dalam pelayar serta iframe tempatan; penempatan dalam Google Sites sebenar perlu disemak selepas URL penerbitan tersedia.
-
-## Aset dan aksesibiliti
-
-Mimi ialah ilustrasi SVG animasi yang dihasilkan untuk aplikasi ini, berpandukan ciri watak dalam rujukan. Semua grafik dan bunyi berfungsi secara setempat. Fon Nunito dan Outfit dibekalkan melalui pakej `@fontsource` berlesen SIL OFL, tanpa permintaan Google Fonts semasa permainan. Kawalan menyokong papan kekunci, maklum balas mempunyai teks dan ikon selain warna, dialog menggunakan elemen asli, serta animasi menghormati `prefers-reduced-motion`.
-
-## Versi pratonton satu fail
+先在另一个终端运行开发服务器，再进行浏览器测试：
 
 ```sh
-npm run build:preview
-CHROMIUM_PATH=/usr/bin/chromium npm run test:preview
+npx playwright install chromium
+npm run test:e2e
+npm run test:audio
+npm run test:art
 ```
 
-Hasilnya ialah `preview/misi-preview.html`. Fon, ilustrasi, gaya dan logik permainan terkandung dalam fail HTML ini. Muat turun dan buka dalam pelayar biasa; tiada pemasangan Node.js diperlukan untuk bermain. Pertuturan masih bergantung pada suara peranti. Pelayar yang diurus organisasi mungkin menyekat fail tempatan; dalam keadaan itu, hidangkan fail melalui pelayan HTTP yang dibenarkan. Ujian menghidangkan HTML yang sama melalui HTTP setempat dan mengesahkan bahawa tiada permintaan aset luaran berlaku.
+环境已有 Chromium 时可设置 `CHROMIUM_PATH=/usr/bin/chromium`；`TEST_URL` 可指向其他测试服务器。浏览器测试覆盖 0–5 分的全部结果、五题原文与解释、重复点击防护、重置、分数页与末页切换、向下箭头动画和响应式 iframe 布局。音频测试检查实际媒体播放事件、WAV 信号强度、音效先于朗读以及静音。图片测试检查背景保存、恢复和独立 Mimi 图层的移除。
 
-Tangkapan skrin halaman utama, jawapan betul, ulang kaji, kejayaan dan telefon dihasilkan oleh ujian dalam `preview/`. Binaan laman web biasa kekal dalam `dist/`. Lesen SIL OFL Nunito dan Outfit disertakan dalam `public/licenses/`, hasil binaan, serta komen HTML versi pratonton.
+## 原图与音效
 
+原始背景 PNG 保存在 `src/images/background-original.png`，未重新绘制或修改像素，并嵌入正式构建作为可靠的默认背景。背景中已经包含 Mimi，因此不再叠加独立 Mimi 图片。GitHub Pages 中用户上传的横向 PNG 也会在发布时自动列出，图片加载失败时仍保留内置背景。
 
-## Original artwork integration
+六个原始 PCM WAV 音效随应用提供，通过原生音频播放，Web Audio 作为备用。马来语朗读使用设备提供的 `ms-MY` 语音；具体音色与可用性取决于设备。每句台词均有可见文字。音频在用户交互后开始，朗读等待音效结束，以免盖住提示音。
 
-The supplied reference images must be uploaded as original file attachments (a ZIP is supported). Place the unchanged background in `src/images/background-original.png` (or `.jpg`). The app embeds these originals automatically; no generated replacement is needed. Chat-only inline images are not available as source files in this environment.
+Nunito 与 Outfit 字体在构建中自带，SIL OFL 许可证位于 `public/licenses/`，也会包含在独立 HTML 中。游戏不依赖 Google Fonts 请求、外部音效文件、API 密钥或开发会话。
 
-Native sound-effect playback can be checked with `CHROMIUM_PATH=/usr/bin/chromium npm run test:audio`. This checks actual playback events, audio signal levels and ordering before speech, rather than only checking audio API calls.
+## 正式发布
 
+源码保存在主分支，静态网站由 `gh-pages` 分支经 GitHub Pages 托管。发布时：
 
-## PNG 原图入口
+1. 运行 `npm run build:pages` 并通过相关测试。
+2. 将 `preview/pages/index.html` 和 `_config.yml` 更新到 `gh-pages`。
+3. 保留该分支已有的原始 PNG 文件；不要添加 `.nojekyll`，因为 Pages 需要在构建时生成原图列表。
+4. 推送后检查 GitHub 的 **pages build and deployment** 结果为 **Success**。
 
-[在线选择原始 PNG](https://g-ipgp251801465-glitch.github.io/kuiz-jenisayattanya/?gambar=1&v=5)：只需选择背景，保留背景里原本的 Mimi，原文件不重绘、不压缩，在当前浏览器保存。此本机选择不会自动修改其他学生看到的版本。
+正式网址不依赖本地服务器、临时隧道或聊天是否仍在进行。保持 GitHub 用户名、仓库名称和 Pages 设置，避免自行删除仓库或关闭 Pages。GitHub 平台本身的服务可用性仍由 GitHub 负责。
 
-要更新所有学生的版本，请在 [GitHub 上传页](https://github.com/g-ipgp251801465-glitch/kuiz-jenisayattanya/upload/gh-pages) 上传原始背景 PNG，并提交更改。GitHub Pages 发布后会自动发现图片，只使用横图背景，不再加载独立 Mimi 图片，不需要 ZIP 或重命名。
+如需在本机试换背景，可打开 `?gambar=1`，直接选择 PNG。此选择只保存在当前浏览器；给所有学生更换背景应将 PNG 上传到 `gh-pages` 或更新源码中的内置原图。
 
-`npm run build:pages` 生成含 Jekyll 原图列表的 Pages 入口。发布时复制 `preview/pages/index.html` 与 `_config.yml` 到 `gh-pages`，保留用户已上传的图片，并移除 `.nojekyll`，使图片列表能在 GitHub Pages 构建时生成。`npm run test:art` 验证 PNG 直接选择、解码、保存、刷新恢复及公开原图加载。
+## Google Sites
 
+在 Google Sites 中选择 **插入 → 嵌入 → 按网址**，填写正式网址。桌面建议使用 16:9，已检查 960 × 540 和 800 × 450。
 
-## 大字彩色版本
+末页提示 **sila tekan butang seterusnya di bawah halaman ini** 指向 Google Sites 页面中位于游戏下方的活动按钮。请在 Google Sites 页面中放置并配置该按钮；游戏不创建或猜测其他活动的网址。
 
-右侧所有正文、选项、分数、按钮与解释使用更大字号和高对比配色。独立 Mimi 选图按钮已移除，历史浏览器存储中的 `mimi` 项会被忽略，但 `background` 项保持可用。正常游戏入口不需要 `gambar=1` 参数。
+```html
+<iframe src="https://g-ipgp251801465-glitch.github.io/kuiz-jenisayattanya/" title="Misi Kenali Jenis Ayat Tanya" width="960" height="540" style="width:100%;aspect-ratio:16/9;border:0;border-radius:20px" allow="autoplay"></iframe>
+```
+
+## Cloudflare
+
+Pages 构建命令为 `npm run build`，输出目录为 `dist`。也可用提供的 `wrangler.jsonc` 将 `dist` 部署为 Workers 静态资源；需要在自己的 Cloudflare 账户完成认证。

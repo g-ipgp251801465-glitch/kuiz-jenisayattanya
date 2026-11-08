@@ -159,18 +159,38 @@ function next() {
     focusContent();
   }, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 170);
 }
-function ending() {
+function ending(announce = true) {
   content.classList.remove('answered');
   screen = 'result'; const success = game.success;
-  setMood(success ? 'happy' : 'sad'); playSound(success ? 'victory' : 'revision');
-  say(success ? victoryLine : revisionLine);
-  if (success) celebrate(65);
-  else revisionTimer = setTimeout(() => setMood(), 2000);
+  setMood(success ? 'happy' : '');
+  if (announce) {
+    setMood(success ? 'happy' : 'sad'); playSound(success ? 'victory' : 'revision');
+    say(success ? victoryLine : revisionLine);
+    if (success) celebrate(65);
+    else revisionTimer = setTimeout(() => setMood(), 2000);
+  }
   content.innerHTML = `<div class="result-content enter ${success ? 'success-ending' : 'revision-ending'}"><div class="eyebrow">${success ? '✦ MISI SELESAI ✦' : 'SETIAP CUBAAN MEMBANTU KITA BELAJAR'}</div>
   ${success ? `<div class="trophy-badge">${icon('trophy')}<span>✧</span><i>✦</i></div><h2 tabindex="-1">TAHNIAH!<br><span class="gradient-text">KAMU HEBAT!</span></h2><p class="result-subtitle">MISI BERJAYA!</p>` : `<h2 tabindex="-1">JOM ULANG KAJI <br><span class="gradient-text">BERSAMA MIMI!</span></h2>`}
   <div class="result-score"><span>MARKAH KAMU</span><strong>${game.score}<small> / 5</small></strong><div class="result-stars">${QUESTIONS.map((_, i) => `<span class="${i < game.score ? 'earned' : ''}">${icon('star')}</span>`).join('')}</div></div>
   ${success ? `<p class="result-note next-activity-note">Seterusnya, teruskan dengan aktiviti yang lain.</p>` : `<div class="revision-cards"><article><span class="revision-letter">A</span><h3>AYAT TANYA<br>DENGAN KATA TANYA</h3><strong>Apakah fungsi komputer?</strong><p>Penerangan: Ayat ini menggunakan kata tanya 'apakah'.</p></article><article><span class="revision-letter">B</span><h3>AYAT TANYA<br>TANPA KATA TANYA</h3><strong>Kamu menggunakan komputer?</strong><p>Penerangan: Ayat ini tidak menggunakan kata tanya. Pertanyaan disampaikan melalui intonasi dan diakhiri dengan tanda soal (?).</p></article></div>`}
-  <div class="result-actions"><button class="button ${success ? 'secondary' : 'primary'}" data-action="start">${icon('replay')} CUBA LAGI</button></div></div>`;
+  <div class="result-actions"><button class="button ${success ? 'secondary' : 'primary'}" data-action="start">${icon('replay')} CUBA LAGI</button><button class="button primary" data-action="activity-outro">HALAMAN SETERUSNYA ${icon('arrow')}</button></div></div>`;
+}
+function activityOutro() {
+  if (!game.finished) return;
+  resetEffects(); stopSpeech();
+  screen = 'outro';
+  content.classList.remove('answered');
+  setMood('happy');
+  playSound('next');
+  content.innerHTML = `<div class="outro-content enter">
+    <button class="score-back" data-action="back-to-score">← Lihat skor semula</button>
+    <h2 class="outro-heading" tabindex="-1">Tahniah!</h2>
+    <p class="outro-title">Teruskan Misi Anda dengan Aktiviti Seterusnya!</p>
+    <svg class="downward-arrow" viewBox="0 0 100 120" aria-hidden="true"><path d="M32 6h36v48h23L50 103 9 54h23Z" fill="currentColor"/><path d="m24 95 26 20 26-20" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <p class="outro-instruction">sila tekan butang seterusnya di bawah halaman ini</p>
+  </div>`;
+  say('Tahniah! Teruskan misi anda dengan aktiviti seterusnya! Sila tekan butang seterusnya di bawah halaman ini.');
+  focusContent();
 }
 function celebrate(count) {
   clearTimeout(celebrationTimer);
@@ -195,6 +215,8 @@ function handleClick(event) {
   const action = event.target.closest('[data-action]')?.dataset.action;
   if (action === 'start') { if (dialog.open) closeDialog(); start(); }
   if (action === 'next') next();
+  if (action === 'activity-outro') activityOutro();
+  if (action === 'back-to-score' && game.finished) { stopSpeech(); ending(false); focusContent(); }
   if (action === 'home') {
     if (screen === 'quiz') showDialog(`<div class="modal-icon">${icon('home')}</div><h2>Kembali ke halaman utama?</h2><p>Kemajuan misi ini akan ditetapkan semula. Kamu boleh mula semula bila-bila masa.</p><div class="modal-actions"><button class="button secondary" data-action="close">SAMBUNG MISI</button><button class="button primary" data-action="confirm-home">HALAMAN UTAMA</button></div>`);
     else home();

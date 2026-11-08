@@ -17,9 +17,12 @@ const assert=require('node:assert/strict');
   for(let i=0;i<5;i++){
    await fits(`question ${i+1}`);await frame.locator('[data-answer="tanpa"]').click();await fits(`feedback ${i+1}`);await frame.locator('[data-action="next"]').click();await frame.locator('.leave').waitFor({state:'detached'});
   }
-  await fits('revision');await frame.getByRole('button',{name:'CUBA LAGI',exact:true}).click();
+  await fits('revision');
+  await frame.getByRole('button',{name:'HALAMAN SETERUSNYA',exact:true}).click();await fits('outro after revision');
+  await frame.getByRole('button',{name:'← Lihat skor semula',exact:true}).click();await fits('revision restored');
+  await frame.getByRole('button',{name:'CUBA LAGI',exact:true}).click();
   for(const a of ['dengan','tanpa','dengan','tanpa','dengan']){await frame.locator(`[data-answer="${a}"]`).click();await frame.locator('[data-action="next"]').click();await frame.locator('.leave').waitFor({state:'detached'})}
-  await fits('success');await frame.getByRole('button',{name:'Kembali ke halaman utama',exact:true}).click();
+  await fits('success');await frame.getByRole('button',{name:'HALAMAN SETERUSNYA',exact:true}).click();await fits('final outro');await frame.getByRole('button',{name:'Kembali ke halaman utama',exact:true}).click();
   await page.waitForTimeout(450);await page.screenshot({path:`.test-results/embed-${w}.png`});
   await frame.getByRole('button',{name:'Hidupkan bunyi',exact:true}).click();
   console.log(`PASS embedded ${w}x${h}: home, all questions and feedback, revision, success; no scrolling`);

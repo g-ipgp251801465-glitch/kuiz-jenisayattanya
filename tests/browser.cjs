@@ -46,6 +46,13 @@ fs.mkdirSync('.test-results', {recursive:true});
    assert.equal(await page.locator('.scene.sad').count(),0);
    await page.screenshot({path:'.test-results/revision-desktop.png'});
   }
+  await page.getByRole('button',{name:'HALAMAN SETERUSNYA',exact:true}).click();
+  assert.equal(await page.locator('.outro-heading').innerText(),'Tahniah!');
+  assert.equal(await page.locator('.outro-title').innerText(),'Teruskan Misi Anda dengan Aktiviti Seterusnya!');
+  assert.equal(await page.locator('.outro-instruction').innerText(),'sila tekan butang seterusnya di bawah halaman ini');
+  assert.equal(await page.locator('.downward-arrow').evaluate(el=>getComputedStyle(el).animationIterationCount),'infinite');
+  await page.getByRole('button',{name:'← Lihat skor semula',exact:true}).click();
+  assert.equal(await page.locator('.result-score>strong').innerText(),`${target} / 5`);
   console.log(`PASS browser score ${target}/5, locked answers, exact explanations, reset`);
  }
  assert.equal(await page.locator('[data-action="continue"]').count(),0);
