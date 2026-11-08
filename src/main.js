@@ -7,6 +7,7 @@ import '@fontsource/outfit/latin-600.css';
 import '@fontsource/outfit/latin-700.css';
 import '@fontsource/outfit/latin-800.css';
 import './style.css';
+import { initializeOriginalArt, installArtPicker } from './original-art.js';
 import { Quiz, QUESTIONS } from './game.js';
 import { mimi } from './mimi.js';
 const originalArt = import.meta.glob('./images/*', {eager:true, query:'?inline', import:'default'});
@@ -222,6 +223,8 @@ function handleClick(event) {
   }
 }
 home();
+installArtPicker();
+initializeOriginalArt();
 function fitLandscape() {
   document.documentElement.style.setProperty('--compact-scale', String(Math.min(1, window.innerHeight / 800)));
 }
