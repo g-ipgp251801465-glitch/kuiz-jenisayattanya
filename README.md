@@ -53,15 +53,9 @@ Jika Chromium sudah dipasang, gunakan `CHROMIUM_PATH=/usr/bin/chromium npm run t
 
 Tiada fail audio luaran diperlukan: semua kesan bunyi menggunakan klip WAV tempatan dengan sandaran Web Audio. Pertuturan menggunakan suara Melayu yang tersedia pada peranti; suara wanita dipilih apabila tersedia. Suara asal Mimi tidak dibekalkan dan suara peranti mungkin berbeza atau tidak tersedia. Semua dialog kekal kelihatan. Ujian automatik mengesahkan panggilan audio dan bahasa pertuturan; semakan pendengaran dengan peranti sasaran masih disyorkan.
 
-## Pautan aktiviti seterusnya
+## Penamat aktiviti
 
-Sunting `public/config.js` sebelum membina:
-
-```js
-window.NEXT_ACTIVITY_URL = 'https://alamat-aktiviti-anda';
-```
-
-Biarkan kosong sehingga pautan sebenar tersedia. Permainan akan memaparkan mesej mesra dan tidak membuka pautan rosak. Fail `config.js` dalam hasil binaan juga boleh disunting selepas binaan. Jangan letakkan rahsia dalam konfigurasi awam.
+Penamat berjaya memaparkan: “Seterusnya, teruskan dengan aktiviti yang lain.” Hanya butang **CUBA LAGI** dikekalkan; tiada butang atau pautan ke aktiviti lain diperlukan.
 
 ## Cloudflare Pages
 

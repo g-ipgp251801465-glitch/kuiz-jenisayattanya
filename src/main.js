@@ -169,8 +169,8 @@ function ending() {
   content.innerHTML = `<div class="result-content enter ${success ? 'success-ending' : 'revision-ending'}"><div class="eyebrow">${success ? '✦ MISI SELESAI ✦' : 'SETIAP CUBAAN MEMBANTU KITA BELAJAR'}</div>
   ${success ? `<div class="trophy-badge">${icon('trophy')}<span>✧</span><i>✦</i></div><h2 tabindex="-1">TAHNIAH!<br><span class="gradient-text">KAMU HEBAT!</span></h2><p class="result-subtitle">MISI BERJAYA!</p>` : `<h2 tabindex="-1">JOM ULANG KAJI <br><span class="gradient-text">BERSAMA MIMI!</span></h2>`}
   <div class="result-score"><span>MARKAH KAMU</span><strong>${game.score}<small> / 5</small></strong><div class="result-stars">${QUESTIONS.map((_, i) => `<span class="${i < game.score ? 'earned' : ''}">${icon('star')}</span>`).join('')}</div></div>
-  ${success ? `<p class="result-note">Hebat! Kamu sudah kenal kedua-dua jenis ayat tanya.<br>Teruskan belajar dan mencuba!</p>` : `<div class="revision-cards"><article><span class="revision-letter">A</span><h3>AYAT TANYA<br>DENGAN KATA TANYA</h3><strong>Apakah fungsi komputer?</strong><p>Penerangan: Ayat ini menggunakan kata tanya 'apakah'.</p></article><article><span class="revision-letter">B</span><h3>AYAT TANYA<br>TANPA KATA TANYA</h3><strong>Kamu menggunakan komputer?</strong><p>Penerangan: Ayat ini tidak menggunakan kata tanya. Pertanyaan disampaikan melalui intonasi dan diakhiri dengan tanda soal (?).</p></article></div>`}
-  <div class="result-actions"><button class="button ${success ? 'secondary' : 'primary'}" data-action="start">${icon('replay')} CUBA LAGI</button>${success ? `<button class="button primary" data-action="continue">TERUSKAN MISI ${icon('arrow')}</button>` : ''}</div></div>`;
+  ${success ? `<p class="result-note next-activity-note">Seterusnya, teruskan dengan aktiviti yang lain.</p>` : `<div class="revision-cards"><article><span class="revision-letter">A</span><h3>AYAT TANYA<br>DENGAN KATA TANYA</h3><strong>Apakah fungsi komputer?</strong><p>Penerangan: Ayat ini menggunakan kata tanya 'apakah'.</p></article><article><span class="revision-letter">B</span><h3>AYAT TANYA<br>TANPA KATA TANYA</h3><strong>Kamu menggunakan komputer?</strong><p>Penerangan: Ayat ini tidak menggunakan kata tanya. Pertanyaan disampaikan melalui intonasi dan diakhiri dengan tanda soal (?).</p></article></div>`}
+  <div class="result-actions"><button class="button ${success ? 'secondary' : 'primary'}" data-action="start">${icon('replay')} CUBA LAGI</button></div></div>`;
 }
 function celebrate(count) {
   clearTimeout(celebrationTimer);
@@ -212,13 +212,7 @@ function handleClick(event) {
     if (!sound) document.querySelector('#sound').click();
     playSound('correct');
   }
-  if (action === 'continue') {
-    const NEXT_ACTIVITY_URL = window.NEXT_ACTIVITY_URL || '';
-    let url;
-    try { url = new URL(NEXT_ACTIVITY_URL); } catch { /* Show friendly message. */ }
-    if (url && ['https:', 'http:'].includes(url.protocol)) window.location.assign(url.href);
-    else showDialog(`<div class="modal-icon">${icon('star')}</div><h2>Misi seterusnya akan tiba!</h2><p>Pautan misi seterusnya belum tersedia. Kamu boleh cuba lagi bersama Mimi sementara menunggu. Jumpa lagi, kawan!</p><button class="button primary" data-action="close">BAIK, MIMI! ${icon('check')}</button>`);
-  }
+
 }
 home();
 installArtPicker();

@@ -48,9 +48,8 @@ fs.mkdirSync('.test-results', {recursive:true});
   }
   console.log(`PASS browser score ${target}/5, locked answers, exact explanations, reset`);
  }
- await page.getByRole('button',{name:'TERUSKAN MISI',exact:true}).click();
- assert((await page.locator('dialog').innerText()).includes('Pautan misi seterusnya belum tersedia.'));
- await page.getByRole('button',{name:'BAIK, MIMI!',exact:true}).click();
+ assert.equal(await page.locator('[data-action="continue"]').count(),0);
+ assert.equal(await page.locator('.next-activity-note').innerText(),'Seterusnya, teruskan dengan aktiviti yang lain.');
  await page.getByRole('button',{name:'Kembali ke halaman utama',exact:true}).click();
  for(const [width,height] of [[1366,768],[1024,768],[800,600],[960,540],[800,450],[390,844],[320,700]]) {
   await page.setViewportSize({width,height}); await page.waitForTimeout(120);
@@ -86,6 +85,6 @@ fs.mkdirSync('.test-results', {recursive:true});
  await page.locator('[data-answer="dengan"]').click();
  assert.equal(await page.evaluate(()=>window.__speechCalls.length),count);
  assert.deepEqual(errors,[]);
- console.log('PASS instructions, sound toggle, native media audio, Malay TTS calls, missing URL handling, responsive layouts; no page errors');
+ console.log('PASS instructions, sound toggle, native media audio, Malay TTS calls, final activity message, responsive layouts; no page errors');
  await browser.close();
 })().catch(e=>{console.error(e);process.exit(1)});
