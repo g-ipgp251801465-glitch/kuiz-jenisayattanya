@@ -10,7 +10,8 @@
     "test": "node --test tests/*.test.js",
     "test:e2e": "node tests/browser.cjs && node tests/embed.cjs",
     "build:preview": "npm run build && node scripts/build-preview.mjs",
-    "test:preview": "node tests/preview.cjs"
+    "test:preview": "node tests/preview.cjs",
+    "test:audio": "node tests/audio.cjs"
   },
   "devDependencies": {
     "playwright": "^1.65.0",

@@ -2,6 +2,10 @@
 
 这是已经实现并通过浏览器测试的游戏实际截图。当前分支用于预览，不改变 `main`。
 
+## 在线试玩
+
+[打开 Mimi 在线游戏](https://g-ipgp251801465-glitch.github.io/kuiz-jenisayattanya/?v=2)
+
 ## 直接查看游戏画面
 
 ![游戏首页](docs/preview/halaman-utama.png)
@@ -16,7 +20,7 @@
 
 解压后，用 Chrome、Edge 或 Safari 打开 `misi-preview.html`。图片、字体、动画、答题逻辑和音效均已包含，无需安装 Node.js。马来语朗读取决于设备提供的语音；所有台词都有文字显示。下一活动链接保持未配置，点击时会显示友好提示。
 
-这是可下载试玩版本，还没有发布为在线游戏网址。
+在线版本由 `gh-pages` 分支发布。
 
 ---
 
@@ -47,7 +51,7 @@ npm run test:e2e
 
 Jika Chromium sudah dipasang, gunakan `CHROMIUM_PATH=/usr/bin/chromium npm run test:e2e`. `TEST_URL` boleh menetapkan alamat pelayan ujian lain. Ujian pelayar meliputi keenam-enam jumlah markah, penjelasan setiap soalan, penguncian jawapan, tetapan semula, arahan, kawalan bunyi, panggilan pertuturan Melayu, pautan belum tersedia serta susun atur desktop dan mudah alih. Tangkapan skrin disimpan dalam `.test-results/` (diabaikan Git).
 
-Tiada fail audio luaran diperlukan: semua kesan bunyi dijana dengan Web Audio selepas interaksi pengguna. Pertuturan menggunakan suara Melayu yang tersedia pada peranti; suara wanita dipilih apabila tersedia. Suara asal Mimi tidak dibekalkan dan suara peranti mungkin berbeza atau tidak tersedia. Semua dialog kekal kelihatan. Ujian automatik mengesahkan panggilan audio dan bahasa pertuturan; semakan pendengaran dengan peranti sasaran masih disyorkan.
+Tiada fail audio luaran diperlukan: semua kesan bunyi menggunakan klip WAV tempatan dengan sandaran Web Audio. Pertuturan menggunakan suara Melayu yang tersedia pada peranti; suara wanita dipilih apabila tersedia. Suara asal Mimi tidak dibekalkan dan suara peranti mungkin berbeza atau tidak tersedia. Semua dialog kekal kelihatan. Ujian automatik mengesahkan panggilan audio dan bahasa pertuturan; semakan pendengaran dengan peranti sasaran masih disyorkan.
 
 ## Pautan aktiviti seterusnya
 
@@ -92,3 +96,10 @@ CHROMIUM_PATH=/usr/bin/chromium npm run test:preview
 Hasilnya ialah `preview/misi-preview.html`. Fon, ilustrasi, gaya dan logik permainan terkandung dalam fail HTML ini. Muat turun dan buka dalam pelayar biasa; tiada pemasangan Node.js diperlukan untuk bermain. Pertuturan masih bergantung pada suara peranti. Pelayar yang diurus organisasi mungkin menyekat fail tempatan; dalam keadaan itu, hidangkan fail melalui pelayan HTTP yang dibenarkan. Ujian menghidangkan HTML yang sama melalui HTTP setempat dan mengesahkan bahawa tiada permintaan aset luaran berlaku.
 
 Tangkapan skrin halaman utama, jawapan betul, ulang kaji, kejayaan dan telefon dihasilkan oleh ujian dalam `preview/`. Binaan laman web biasa kekal dalam `dist/`. Lesen SIL OFL Nunito dan Outfit disertakan dalam `public/licenses/`, hasil binaan, serta komen HTML versi pratonton.
+
+
+## Original artwork integration
+
+The supplied reference images must be uploaded as original file attachments (a ZIP is supported). Place the unchanged background in `src/images/background-original.png` (or `.jpg`) and Mimi in `src/images/mimi-original.png` (or `.jpg`). The app embeds these originals automatically; no generated replacement is needed. Chat-only inline images are not available as source files in this environment.
+
+Native sound-effect playback can be checked with `CHROMIUM_PATH=/usr/bin/chromium npm run test:audio`. This checks actual playback events, audio signal levels and ordering before speech, rather than only checking audio API calls.

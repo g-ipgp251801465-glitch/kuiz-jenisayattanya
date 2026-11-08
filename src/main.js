@@ -9,7 +9,11 @@ import '@fontsource/outfit/latin-800.css';
 import './style.css';
 import { Quiz, QUESTIONS } from './game.js';
 import { mimi } from './mimi.js';
-import { playSound, speak, stopSpeech, setSound, onSpeaking } from './audio.js';
+const originalArt = import.meta.glob('./images/*', {eager:true, query:'?inline', import:'default'});
+const originalBackground = originalArt['./images/background-original.png'] || originalArt['./images/background-original.jpg'];
+const originalMimi = originalArt['./images/mimi-original.png'] || originalArt['./images/mimi-original.jpg'];
+const mimiVisual = originalMimi ? `<img class="mimi original-mimi" src="${originalMimi}" alt="Mimi, rakan robot kucing kamu">` : mimi;
+import { playSound, speak, stopSpeech, setSound, onSpeaking, onAudioStatus } from './audio.js';
 
 const icons = {
   arrow: '<path d="M5 12h14m-6-6 6 6-6 6"/>',
@@ -43,7 +47,7 @@ const revisionLine = 'Alaaa... nampaknya kita perlu ulang kaji sedikit lagi. Jan
 app.innerHTML = `<main class="game-shell">
   <header class="topbar">
     <button class="brand" data-action="home" aria-label="Kembali ke halaman utama"><span class="brand-symbol">${icon('star')}</span><span>Misi Bahasa<span class="brand-dot">.</span></span></button>
-    <div class="topbar-right"><span class="year-badge">BAHASA MELAYU <i></i> TAHUN 4</span><button class="icon-button" id="sound" data-action="sound" aria-label="Matikan bunyi" aria-pressed="true">${icon('sound')}</button></div>
+    <div class="topbar-right"><span class="year-badge">BAHASA MELAYU <i></i> TAHUN 4</span><button class="icon-button" id="sound" data-action="sound" aria-label="Matikan bunyi" aria-pressed="true">${icon('sound')}<span>BUNYI HIDUP</span></button><button class="sound-test" data-action="test-sound">Uji bunyi</button></div>
   </header>
   <div class="workspace">
     <section class="scene" aria-label="Bilik hologram Mimi">
@@ -53,7 +57,7 @@ app.innerHTML = `<main class="game-shell">
       <span class="float-symbol symbol-one" aria-hidden="true">?</span><span class="float-symbol symbol-two" aria-hidden="true">?</span><span class="float-symbol symbol-three" aria-hidden="true">✧</span>
       <div class="holo-tile tile-one" aria-hidden="true">${icon('book')}</div><div class="holo-tile tile-two" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="5" width="22" height="16" rx="2"/><path d="m2 26 3-5h22l3 5H2Zm11-2h6"/></svg></div>
       <div class="scene-heading"><span class="live-dot"></span> RAKAN MISI KAMU</div>
-      <div class="mimi-stage"><div class="mimi-aura"></div>${mimi}<div class="reaction-badge" aria-hidden="true"></div><div class="platform"><span></span></div></div>
+      <div class="mimi-stage"><div class="mimi-aura"></div>${mimiVisual}<div class="reaction-badge" aria-hidden="true"></div><div class="platform"><span></span></div></div>
       <div class="crystals crystals-left" aria-hidden="true"><i></i><i></i><i></i></div><div class="crystals crystals-right" aria-hidden="true"><i></i><i></i></div>
       <div class="mimi-name"><span>Mimi</span><span class="online-dot"></span></div>
       <div class="speech-bubble" id="mimi-dialogue" aria-live="polite">Hai, kawan! Sedia untuk<br>misi yang menyeronokkan? <span>✦</span></div>
@@ -64,12 +68,21 @@ app.innerHTML = `<main class="game-shell">
   <footer class="footer"><span><span class="tiny-star">✧</span> Setiap soalan, satu langkah lebih hebat.</span><span>Direka untuk minda ingin tahu <span class="footer-spark">✦</span></span></footer>
 </main>
 <dialog id="dialog"><button class="dialog-close icon-button" data-action="close" aria-label="Tutup">${icon('cross')}</button><div id="dialog-content"></div></dialog>
-<div class="particles" aria-hidden="true"></div>`;
+<div class="particles" aria-hidden="true"></div><div id="audio-status" role="status"></div>`;
+if (originalBackground) {
+  document.querySelector('.workspace').style.backgroundImage = `url("${originalBackground}")`;
+  document.querySelector('.workspace').classList.add('original-background');
+}
+if (originalMimi) document.querySelector('.scene').classList.add('original-character');
 const content = document.querySelector('#content');
 const dialogue = document.querySelector('#mimi-dialogue');
 const scene = document.querySelector('.scene');
 const dialog = document.querySelector('#dialog');
 onSpeaking(active => scene.classList.toggle('speaking', active));
+onAudioStatus(status => {
+  const notice = document.querySelector('#audio-status');
+  notice.textContent = status === 'blocked' ? 'Bunyi belum dapat dimainkan. Tekan “Uji bunyi” dan semak kelantangan peranti.' : '';
+});
 function setMood(mood = '') { scene.classList.remove('happy', 'surprised', 'sad'); if (mood) scene.classList.add(mood); }
 function say(text, voice = true) { dialogue.textContent = text; if (voice) speak(text); }
 function focusContent() { content.querySelector('h1, h2')?.focus({preventScroll: true}); }
@@ -84,6 +97,7 @@ function resetEffects() {
   document.querySelector('.reaction-badge').replaceChildren();
 }
 function home() {
+  content.classList.remove('answered');
   resetEffects(); stopSpeech(); game.reset(); screen = 'home'; setMood();
   say('Hai, kawan! Sedia untuk misi yang menyeronokkan?', false);
   content.innerHTML = `<div class="home-content enter"><div class="eyebrow"><span class="eyebrow-line"></span> JOM BELAJAR BERSAMA MIMI</div>
@@ -100,10 +114,11 @@ function start() {
 }
 function question() {
   const q = game.question;
+  content.classList.remove('answered');
   content.innerHTML = `<div class="quiz-content enter">${progress()}
     <h2 class="question-heading" tabindex="-1">Baca ayat di bawah.</h2><p class="question-hint">Ayat ini termasuk dalam jenis ayat tanya yang mana?</p>
     <div class="sentence-panel"><span class="quote-mark" aria-hidden="true">“</span><p>${q.sentence}</p><span class="sentence-corner" aria-hidden="true">✦</span></div>
-    <div class="answers"><button class="answer" data-answer="dengan"><span class="answer-letter">A</span><span>DENGAN KATA TANYA</span><span class="answer-radio"></span></button><button class="answer" data-answer="tanpa"><span class="answer-letter">B</span><span>TANPA KATA TANYA</span><span class="answer-radio"></span></button></div>
+    <div class="answers"><button class="answer" data-answer="dengan"><span class="answer-letter">A</span><span class="answer-text">Ayat Tanya dengan Kata Tanya</span><span class="answer-radio"></span></button><button class="answer" data-answer="tanpa"><span class="answer-letter">B</span><span class="answer-text">Ayat Tanya Tanpa Kata Tanya</span><span class="answer-radio"></span></button></div>
     <div id="feedback" aria-live="polite"><div class="choice-note">${icon('check')} Pilih satu jawapan yang paling tepat.</div></div>
   </div>`;
 }
@@ -111,6 +126,7 @@ function answer(choice) {
   const correct = game.answer(choice);
   if (correct === null) return;
   const q = game.question;
+  content.classList.add('answered');
   stopSpeech(); playSound(correct ? 'correct' : 'wrong'); setMood(correct ? 'happy' : 'surprised');
   for (const button of content.querySelectorAll('[data-answer]')) {
     button.disabled = true;
@@ -145,6 +161,7 @@ function next() {
   }, window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 170);
 }
 function ending() {
+  content.classList.remove('answered');
   screen = 'result'; const success = game.success;
   setMood(success ? 'happy' : 'sad'); playSound(success ? 'victory' : 'revision');
   say(success ? victoryLine : revisionLine);
@@ -173,7 +190,6 @@ dialog.addEventListener('cancel', stopSpeech);
 dialog.addEventListener('close', () => { if (dialogReturnFocus?.isConnected) dialogReturnFocus.focus(); });
 dialog.addEventListener('click', event => { if (event.target === dialog) { const r=dialog.getBoundingClientRect(); if (event.clientX<r.left || event.clientX>r.right || event.clientY<r.top || event.clientY>r.bottom) closeDialog(); } });
 app.addEventListener('click', handleClick);
-document.querySelector('#dialog').addEventListener('click', handleClick);
 function handleClick(event) {
   const answerButton = event.target.closest('[data-answer]');
   if (answerButton) { answer(answerButton.dataset.answer); return; }
@@ -189,8 +205,13 @@ function handleClick(event) {
   if (action === 'close') closeDialog();
   if (action === 'sound') {
     sound = !sound; setSound(sound);
-    const button = document.querySelector('#sound'); button.innerHTML = icon(sound ? 'sound' : 'mute'); button.setAttribute('aria-pressed', String(sound)); button.setAttribute('aria-label', sound ? 'Matikan bunyi' : 'Hidupkan bunyi');
+    const button = document.querySelector('#sound'); button.innerHTML = icon(sound ? 'sound' : 'mute') + `<span>${sound ? 'BUNYI HIDUP' : 'BUNYI MATI'}</span>`; button.setAttribute('aria-pressed', String(sound)); button.setAttribute('aria-label', sound ? 'Matikan bunyi' : 'Hidupkan bunyi');
     if (sound) playSound('next');
+  }
+  if (action === 'test-sound') {
+    stopSpeech();
+    if (!sound) document.querySelector('#sound').click();
+    playSound('correct');
   }
   if (action === 'continue') {
     const NEXT_ACTIVITY_URL = window.NEXT_ACTIVITY_URL || '';
