@@ -12,8 +12,7 @@ import { Quiz, QUESTIONS } from './game.js';
 import { mimi } from './mimi.js';
 const originalArt = import.meta.glob('./images/*', {eager:true, query:'?inline', import:'default'});
 const originalBackground = originalArt['./images/background-original.png'] || originalArt['./images/background-original.jpg'];
-const originalMimi = originalArt['./images/mimi-original.png'] || originalArt['./images/mimi-original.jpg'];
-const mimiVisual = originalMimi ? `<img class="mimi original-mimi" src="${originalMimi}" alt="Mimi, rakan robot kucing kamu">` : mimi;
+const mimiVisual = mimi;
 import { playSound, speak, stopSpeech, setSound, onSpeaking, onAudioStatus } from './audio.js';
 
 const icons = {
@@ -74,7 +73,6 @@ if (originalBackground) {
   document.querySelector('.workspace').style.backgroundImage = `url("${originalBackground}")`;
   document.querySelector('.workspace').classList.add('original-background');
 }
-if (originalMimi) document.querySelector('.scene').classList.add('original-character');
 const content = document.querySelector('#content');
 const dialogue = document.querySelector('#mimi-dialogue');
 const scene = document.querySelector('.scene');
@@ -169,7 +167,7 @@ function ending() {
   if (success) celebrate(65);
   else revisionTimer = setTimeout(() => setMood(), 2000);
   content.innerHTML = `<div class="result-content enter ${success ? 'success-ending' : 'revision-ending'}"><div class="eyebrow">${success ? '✦ MISI SELESAI ✦' : 'SETIAP CUBAAN MEMBANTU KITA BELAJAR'}</div>
-  ${success ? `<div class="trophy-badge">${icon('trophy')}<span>✧</span><i>✦</i></div><h2 tabindex="-1">TAHNIAH!<br><span class="gradient-text">KAMU HEBAT!</span></h2><p class="result-subtitle">MISI BERJAYA!</p>` : `<h2 tabindex="-1">JOM ULANG KAJI<br><span class="gradient-text">BERSAMA MIMI!</span></h2>`}
+  ${success ? `<div class="trophy-badge">${icon('trophy')}<span>✧</span><i>✦</i></div><h2 tabindex="-1">TAHNIAH!<br><span class="gradient-text">KAMU HEBAT!</span></h2><p class="result-subtitle">MISI BERJAYA!</p>` : `<h2 tabindex="-1">JOM ULANG KAJI <br><span class="gradient-text">BERSAMA MIMI!</span></h2>`}
   <div class="result-score"><span>MARKAH KAMU</span><strong>${game.score}<small> / 5</small></strong><div class="result-stars">${QUESTIONS.map((_, i) => `<span class="${i < game.score ? 'earned' : ''}">${icon('star')}</span>`).join('')}</div></div>
   ${success ? `<p class="result-note">Hebat! Kamu sudah kenal kedua-dua jenis ayat tanya.<br>Teruskan belajar dan mencuba!</p>` : `<div class="revision-cards"><article><span class="revision-letter">A</span><h3>AYAT TANYA<br>DENGAN KATA TANYA</h3><strong>Apakah fungsi komputer?</strong><p>Penerangan: Ayat ini menggunakan kata tanya 'apakah'.</p></article><article><span class="revision-letter">B</span><h3>AYAT TANYA<br>TANPA KATA TANYA</h3><strong>Kamu menggunakan komputer?</strong><p>Penerangan: Ayat ini tidak menggunakan kata tanya. Pertanyaan disampaikan melalui intonasi dan diakhiri dengan tanda soal (?).</p></article></div>`}
   <div class="result-actions"><button class="button ${success ? 'secondary' : 'primary'}" data-action="start">${icon('replay')} CUBA LAGI</button>${success ? `<button class="button primary" data-action="continue">TERUSKAN MISI ${icon('arrow')}</button>` : ''}</div></div>`;

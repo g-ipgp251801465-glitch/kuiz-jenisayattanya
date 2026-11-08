@@ -100,15 +100,20 @@ Tangkapan skrin halaman utama, jawapan betul, ulang kaji, kejayaan dan telefon d
 
 ## Original artwork integration
 
-The supplied reference images must be uploaded as original file attachments (a ZIP is supported). Place the unchanged background in `src/images/background-original.png` (or `.jpg`) and Mimi in `src/images/mimi-original.png` (or `.jpg`). The app embeds these originals automatically; no generated replacement is needed. Chat-only inline images are not available as source files in this environment.
+The supplied reference images must be uploaded as original file attachments (a ZIP is supported). Place the unchanged background in `src/images/background-original.png` (or `.jpg`). The app embeds these originals automatically; no generated replacement is needed. Chat-only inline images are not available as source files in this environment.
 
 Native sound-effect playback can be checked with `CHROMIUM_PATH=/usr/bin/chromium npm run test:audio`. This checks actual playback events, audio signal levels and ordering before speech, rather than only checking audio API calls.
 
 
 ## PNG 原图入口
 
-[在线选择原始 PNG](https://g-ipgp251801465-glitch.github.io/kuiz-jenisayattanya/?gambar=1&v=3)：可直接选择背景与 Mimi，原文件不重绘、不压缩，在当前浏览器保存。此本机选择不会自动修改其他学生看到的版本。
+[在线选择原始 PNG](https://g-ipgp251801465-glitch.github.io/kuiz-jenisayattanya/?gambar=1&v=5)：只需选择背景，保留背景里原本的 Mimi，原文件不重绘、不压缩，在当前浏览器保存。此本机选择不会自动修改其他学生看到的版本。
 
-要更新所有学生的版本，请在 [GitHub 上传页](https://github.com/g-ipgp251801465-glitch/kuiz-jenisayattanya/upload/gh-pages) 上传两张原始 PNG，并提交更改。GitHub Pages 发布后会自动发现图片，横图用于背景，竖图或接近正方形的图用于 Mimi，不需要 ZIP 或重命名。
+要更新所有学生的版本，请在 [GitHub 上传页](https://github.com/g-ipgp251801465-glitch/kuiz-jenisayattanya/upload/gh-pages) 上传原始背景 PNG，并提交更改。GitHub Pages 发布后会自动发现图片，只使用横图背景，不再加载独立 Mimi 图片，不需要 ZIP 或重命名。
 
 `npm run build:pages` 生成含 Jekyll 原图列表的 Pages 入口。发布时复制 `preview/pages/index.html` 与 `_config.yml` 到 `gh-pages`，保留用户已上传的图片，并移除 `.nojekyll`，使图片列表能在 GitHub Pages 构建时生成。`npm run test:art` 验证 PNG 直接选择、解码、保存、刷新恢复及公开原图加载。
+
+
+## 大字彩色版本
+
+右侧所有正文、选项、分数、按钮与解释使用更大字号和高对比配色。独立 Mimi 选图按钮已移除，历史浏览器存储中的 `mimi` 项会被忽略，但 `background` 项保持可用。正常游戏入口不需要 `gambar=1` 参数。

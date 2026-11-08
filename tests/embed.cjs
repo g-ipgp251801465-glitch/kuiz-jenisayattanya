@@ -6,6 +6,7 @@ const assert=require('node:assert/strict');
  const address=process.env.TEST_URL||'http://localhost:5173';
  await page.setContent(`<iframe title="Permainan" src="${address}" width="960" height="540" style="border:0" allow="autoplay"></iframe>`);
  const frame=page.frameLocator('iframe');
+ await frame.locator('.workspace').evaluate(el=>el.classList.add('original-background'));
  async function fits(label){await page.waitForTimeout(150);const size=await frame.locator('body').evaluate(()=>({width:innerWidth,height:innerHeight,scrollW:document.documentElement.scrollWidth,scrollH:document.documentElement.scrollHeight}));assert(size.scrollW<=size.width&&size.scrollH<=size.height,`${label}: ${JSON.stringify(size)}`)}
  for(const [w,h] of [[960,540],[800,450]]){
   await page.locator('iframe').evaluate((el,{w,h})=>{el.width=w;el.height=h},{w,h});

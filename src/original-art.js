@@ -36,23 +36,10 @@ function imageUrl(key, blob) {
   return url;
 }
 export function applyOriginalImage(key, blob) {
-  const url = imageUrl(key, blob);
-  if (key === 'background') {
-    const workspace = document.querySelector('.workspace');
-    workspace.style.backgroundImage = `url("${url}")`;
-    workspace.classList.add('original-background');
-  } else {
-    const scene = document.querySelector('.scene');
-    let image = scene.querySelector('img.original-mimi');
-    if (!image) {
-      image = document.createElement('img');
-      image.className = 'mimi original-mimi';
-      image.alt = 'Mimi asal, rakan robot kucing kamu';
-      scene.querySelector('.mimi-stage .mimi').replaceWith(image);
-    }
-    image.src = url;
-    scene.classList.add('original-character');
-  }
+  if (key !== 'background') return;
+  const workspace = document.querySelector('.workspace');
+  workspace.style.backgroundImage = `url("${imageUrl(key, blob)}")`;
+  workspace.classList.add('original-background');
 }
 async function validateImage(file) {
   if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type)) throw new Error('Pilih fail PNG, JPG atau WebP.');
@@ -67,7 +54,7 @@ async function validateImage(file) {
 }
 export async function initializeOriginalArt() {
   // GitHub Pages supplies the repository PNG list at publication time.
-  // Aspect ratios identify the landscape background and portrait Mimi without renaming files.
+  // Only landscape backgrounds are loaded. Mimi is already part of the original background.
   const published = Array.isArray(window.MIMI_UPLOADED_PNGS) ? window.MIMI_UPLOADED_PNGS : [];
   await Promise.all(published.map(async url => {
     try {
@@ -76,15 +63,10 @@ export async function initializeOriginalArt() {
         const workspace = document.querySelector('.workspace');
         workspace.style.backgroundImage = `url("${url}")`;
         workspace.classList.add('original-background');
-      } else {
-        const scene = document.querySelector('.scene');
-        let mimi = scene.querySelector('img.original-mimi');
-        if (!mimi) { mimi = document.createElement('img'); mimi.className = 'mimi original-mimi'; mimi.alt = 'Mimi asal'; scene.querySelector('.mimi-stage .mimi').replaceWith(mimi); }
-        mimi.src = url; scene.classList.add('original-character');
       }
     } catch { /* A failed image must not block the quiz. */ }
   }));
-  await Promise.all(['background','mimi'].map(async key => {
+  await Promise.all(['background'].map(async key => {
     try { const file = await readImage(key); if (file) applyOriginalImage(key, file); } catch { /* Picking a file still works when storage is restricted. */ }
   }));
 }
@@ -93,10 +75,10 @@ export function installArtPicker() {
   const panel = document.createElement('aside');
   panel.className = 'art-picker';
   panel.setAttribute('aria-label', 'Pilih gambar asal');
-  panel.innerHTML = `<div class="art-picker-heading"><strong>Gunakan PNG asal</strong><span>Pilih PNG latar: Mimi dalam gambar asal turut dikekalkan. PNG Mimi berasingan ialah pilihan.</span></div>
-    <div class="art-picker-buttons"><label class="art-file-button">Pilih PNG latar<input type="file" accept="image/png,image/jpeg,image/webp" data-art="background"></label><label class="art-file-button">Pilih PNG Mimi (pilihan)<input type="file" accept="image/png,image/jpeg,image/webp" data-art="mimi"></label></div>
+  panel.innerHTML = `<div class="art-picker-heading"><strong>Gunakan PNG asal</strong><span>Pilih PNG latar sahaja. Mimi dalam gambar latar asal dikekalkan.</span></div>
+    <div class="art-picker-buttons"><label class="art-file-button">Pilih PNG latar<input type="file" accept="image/png,image/jpeg,image/webp" data-art="background"></label></div>
     <p class="art-picker-status" role="status">Gambar disimpan pada pelayar ini. Perubahan ini belum mengubah versi untuk semua murid.</p>
-    <a class="art-finish" href="?v=3">Lihat permainan →</a><p class="art-publish">Untuk semua murid: <a href="https://github.com/g-ipgp251801465-glitch/kuiz-jenisayattanya/upload/gh-pages" target="_blank" rel="noopener">Muat naik PNG asal ke GitHub</a>, kemudian pilih “Commit changes”. Versi umum akan menggunakan PNG asal secara automatik.</p>`;
+    <a class="art-finish" href="?v=5">Lihat permainan →</a><p class="art-publish">Untuk semua murid: <a href="https://github.com/g-ipgp251801465-glitch/kuiz-jenisayattanya/upload/gh-pages" target="_blank" rel="noopener">Muat naik PNG asal ke GitHub</a>, kemudian pilih “Commit changes”. Versi umum akan menggunakan PNG asal secara automatik.</p>`;
   document.body.prepend(panel);
   panel.addEventListener('change', async event => {
     const input = event.target.closest('[data-art]');
