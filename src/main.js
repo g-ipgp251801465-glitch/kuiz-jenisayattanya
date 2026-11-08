@@ -47,7 +47,7 @@ const revisionLine = 'Alaaa... nampaknya kita perlu ulang kaji sedikit lagi. Jan
 app.innerHTML = `<main class="game-shell">
   <header class="topbar">
     <button class="brand" data-action="home" aria-label="Kembali ke halaman utama"><span class="brand-symbol">${icon('star')}</span><span>Misi Bahasa<span class="brand-dot">.</span></span></button>
-    <div class="topbar-right"><span class="year-badge">BAHASA MELAYU <i></i> TAHUN 4</span><button class="icon-button" id="sound" data-action="sound" aria-label="Matikan bunyi" aria-pressed="true">${icon('sound')}<span>BUNYI HIDUP</span></button><button class="sound-test" data-action="test-sound">Uji bunyi</button></div>
+    <div class="topbar-right"><span class="year-badge pass-badge">LULUS: 4/5</span><button class="icon-button" id="sound" data-action="sound" aria-label="Matikan bunyi" aria-pressed="true">${icon('sound')}<span>BUNYI HIDUP</span></button><button class="sound-test" data-action="test-sound">Uji bunyi</button></div>
   </header>
   <div class="workspace">
     <section class="scene" aria-label="Bilik hologram Mimi">

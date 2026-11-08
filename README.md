@@ -1,6 +1,6 @@
 # MISI KENALI JENIS AYAT TANYA!
 
-**正式在线游戏 / Laman rasmi:** https://g-ipgp251801465-glitch.github.io/kuiz-jenisayattanya/
+**正式在线游戏 / Laman rasmi:** https://g-ipgp251801465-glitch.github.io/kuiz-jenisayattanya/play/
 
 适合马来西亚四年级学生的马来语互动测验。五道题、即时解释、一次性计分、成功与复习两种结果。答对 4 或 5 题时，分数页的 **HALAMAN SETERUSNYA** 才会出现并进入独立末页；答对 0–3 题时只能复习及重试。末页显示祝贺文字、持续向下移动的箭头，以及点击所在网页下方活动按钮的提示。**Lihat skor semula** 可返回查看原分数，**CUBA LAGI** 完整重置测验。
 
@@ -53,7 +53,7 @@ Nunito 与 Outfit 字体在构建中自带，SIL OFL 许可证位于 `public/lic
 源码保存在主分支，静态网站由 `gh-pages` 分支经 GitHub Pages 托管。发布时：
 
 1. 运行 `npm run build:pages` 并通过相关测试。
-2. 将 `preview/pages/index.html` 和 `_config.yml` 更新到 `gh-pages`。
+2. 将 `preview/pages/index.html`、`preview/pages/play/index.html` 和 `_config.yml` 更新到 `gh-pages` 的相同路径。
 3. 保留该分支已有的原始 PNG 文件；不要添加 `.nojekyll`，因为 Pages 需要在构建时生成原图列表。
 4. 推送后检查 GitHub 的 **pages build and deployment** 结果为 **Success**。
 
@@ -79,3 +79,10 @@ Pages 构建命令为 `npm run build`，输出目录为 `dist`。也可用提供
 ## Syarat meneruskan misi
 
 Murid mesti menjawab sekurang-kurangnya **4 daripada 5 soalan** dengan betul dan melengkapkan semua lima soalan. Markah 0–3 memaparkan ulang kaji dan **CUBA LAGI** sahaja. Markah 4–5 membuka **HALAMAN SETERUSNYA**. Semakan juga dibuat dalam pengendali halaman akhir supaya peraturan ini bukan sekadar menyembunyikan butang.
+
+
+## 固定游戏入口与旧缓存
+
+推荐游戏入口为 `/kuiz-jenisayattanya/play/`，页面标有 **LULUS: 4/5**。根入口会自动转到 `/play/`，保留查询参数和片段。发布时必须一起更新两个入口，避免旧书签指向不同规则。
+
+`npm run test:entry` 在本地检查生成的 Pages 文件：旧根入口跳转、查询参数保留、4/5 标记，以及 3 分无法继续和 4 分可以继续。运行前请先执行 `npm run build:pages`。
