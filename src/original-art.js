@@ -93,10 +93,10 @@ export function installArtPicker() {
   const panel = document.createElement('aside');
   panel.className = 'art-picker';
   panel.setAttribute('aria-label', 'Pilih gambar asal');
-  panel.innerHTML = `<div class="art-picker-heading"><strong>Gunakan PNG asal</strong><span>Pilih gambar terus daripada peranti. Tidak perlu ZIP.</span></div>
-    <div class="art-picker-buttons"><label class="art-file-button">Pilih PNG latar<input type="file" accept="image/png,image/jpeg,image/webp" data-art="background"></label><label class="art-file-button">Pilih PNG Mimi<input type="file" accept="image/png,image/jpeg,image/webp" data-art="mimi"></label></div>
+  panel.innerHTML = `<div class="art-picker-heading"><strong>Gunakan PNG asal</strong><span>Pilih PNG latar: Mimi dalam gambar asal turut dikekalkan. PNG Mimi berasingan ialah pilihan.</span></div>
+    <div class="art-picker-buttons"><label class="art-file-button">Pilih PNG latar<input type="file" accept="image/png,image/jpeg,image/webp" data-art="background"></label><label class="art-file-button">Pilih PNG Mimi (pilihan)<input type="file" accept="image/png,image/jpeg,image/webp" data-art="mimi"></label></div>
     <p class="art-picker-status" role="status">Gambar disimpan pada pelayar ini. Perubahan ini belum mengubah versi untuk semua murid.</p>
-    <a class="art-finish" href="?v=3">Lihat permainan →</a><p class="art-publish">Untuk semua murid: <a href="https://github.com/g-ipgp251801465-glitch/kuiz-jenisayattanya/upload/gh-pages" target="_blank" rel="noopener">Muat naik kedua-dua PNG ke GitHub</a>, kemudian pilih “Commit changes”. Versi umum akan menggunakan PNG asal secara automatik.</p>`;
+    <a class="art-finish" href="?v=3">Lihat permainan →</a><p class="art-publish">Untuk semua murid: <a href="https://github.com/g-ipgp251801465-glitch/kuiz-jenisayattanya/upload/gh-pages" target="_blank" rel="noopener">Muat naik PNG asal ke GitHub</a>, kemudian pilih “Commit changes”. Versi umum akan menggunakan PNG asal secara automatik.</p>`;
   document.body.prepend(panel);
   panel.addEventListener('change', async event => {
     const input = event.target.closest('[data-art]');

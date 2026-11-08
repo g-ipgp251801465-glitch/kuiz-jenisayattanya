@@ -10,6 +10,7 @@ const assert=require('node:assert/strict');
  for(const key of ['background','mimi']){
   await page.locator(`[data-art="${key}"]`).setInputFiles({name:key+'.png',mimeType:'image/png',buffer:Buffer.from(png,'base64')});
   await page.waitForFunction(label=>document.querySelector('.art-picker-status').textContent.startsWith(label)&&document.querySelector('.art-picker-status').textContent.includes('disimpan pada pelayar ini'), key==='background'?'Latar':'Mimi');
+  if(key==='background') assert.equal(await page.locator('svg.mimi').isVisible(),false);
  }
  assert.equal(await page.locator('.workspace.original-background').count(),1);
  assert.equal(await page.locator('img.original-mimi').count(),1);
